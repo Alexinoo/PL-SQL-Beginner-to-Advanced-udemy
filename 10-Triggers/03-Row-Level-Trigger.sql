@@ -1,0 +1,26 @@
+create or replace TRIGGER CUSTOMER_AFTER_UPDATE
+AFTER UPDATE
+ON CUSTOMER
+FOR EACH ROW
+DECLARE
+  V_USERNAME VARCHAR2(100);
+BEGIN
+  SELECT user INTO V_USERNAME FROM DUAL;
+  
+  INSERT INTO AUDIT_TABLE(TABLE_NAME,USERID,OPERATION_DATE,OPERATION)
+  VALUES('CUSTOMER',V_USERNAME,SYSDATE,'Update Operation : Row level');
+  
+END;
+
+
+===============================================================================
+
+UPDATE CUSTOMER SET date_added=SYSDATE WHERE region = 'SOUTH';
+COMMIT;
+
+
+--SELECT * FROM AUDIT_TABLE
+
+CUSTOMER	INVENTORY	24-SEP-23	Update Operation : Row level
+CUSTOMER	INVENTORY	24-SEP-23	Update Operation : Row level
+CUSTOMER	INVENTORY	24-SEP-23	Update Operation : Row level
